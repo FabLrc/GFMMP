@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Psychologique - Domaine Militaire</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d3436 100%);
+            color: #00ff00;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #00ff00;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2d5016 0%, #3d6b1f 100%);
+            padding: 30px;
+            text-align: center;
+            border-bottom: 3px solid #00ff00;
+            position: relative;
+        }
+
+        .header-logos {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .header-logo {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            border: 2px solid #00ff00;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 5px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        }
+
+        .subtitle {
+            background: rgba(45, 80, 22, 0.6);
+            padding: 15px 30px;
+            font-size: 14px;
+            line-height: 1.6;
+            border-bottom: 1px solid #00ff00;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .question-block {
+            background: rgba(0, 50, 0, 0.3);
+            border: 1px solid #00ff00;
+            margin-bottom: 25px;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        .question-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #00ff00;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #00ff00;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin: 8px 0;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid #003300;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .option:hover {
+            background: rgba(0, 100, 0, 0.3);
+            border-color: #00ff00;
+        }
+
+        .option input[type="radio"] {
+            margin-right: 15px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #00ff00;
+        }
+
+        .option label {
+            cursor: pointer;
+            flex: 1;
+            font-size: 14px;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #2d5016 0%, #3d6b1f 100%);
+            color: #00ff00;
+            border: 2px solid #00ff00;
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto;
+            letter-spacing: 2px;
+            transition: all 0.3s;
+            font-family: 'Courier New', monospace;
+        }
+
+        .submit-btn:hover {
+            background: #00ff00;
+            color: #000000;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.6);
+        }
+
+        .result {
+            background: rgba(0, 100, 0, 0.3);
+            border: 2px solid #00ff00;
+            padding: 30px;
+            margin-top: 30px;
+            text-align: center;
+            display: none;
+        }
+
+        .result h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #00ff00;
+        }
+
+        .score {
+            font-size: 48px;
+            font-weight: bold;
+            color: #00ff00;
+            margin: 20px 0;
+            text-shadow: 0 0 15px rgba(0, 255, 0, 0.8);
+        }
+
+        .status {
+            font-size: 20px;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+        }
+
+        .status.apte {
+            background: rgba(0, 255, 0, 0.2);
+            border: 2px solid #00ff00;
+        }
+
+        .pdf-btn {
+            background: #003d00;
+            color: #00ff00;
+            border: 2px solid #00ff00;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s;
+            font-family: 'Courier New', monospace;
+        }
+
+        .pdf-btn:hover {
+            background: #00ff00;
+            color: #000000;
+        }
+
+        .error {
+            color: #ff0000;
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid #ff0000;
+            padding: 15px;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .signature-section {
+            background: rgba(0, 50, 0, 0.3);
+            border: 1px solid #00ff00;
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        .signature-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #00ff00;
+            margin-bottom: 15px;
+        }
+
+        .signature-canvas {
+            width: 100%;
+            height: 150px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid #00ff00;
+            cursor: crosshair;
+            display: block;
+        }
+
+        .signature-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .clear-btn {
+            background: #3d0000;
+            color: #ff0000;
+            border: 2px solid #ff0000;
+            padding: 8px 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Courier New', monospace;
+        }
+
+        .clear-btn:hover {
+            background: #ff0000;
+            color: #000000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-logos">
+                <img src="images/logo.jpg" alt="Logo 1" class="header-logo">
+                <img src="images/logo.jpg" alt="Logo 2" class="header-logo">
+            </div>
+            <h1>Test Psychologique - Domaine Militaire</h1>
+        </div>
+        
+        <div class="subtitle">
+            Ce test évalue votre aptitude psychologique pour le domaine militaire. Répondez honnêtement en choisissant l'option qui vous correspond le mieux. (Une réponse par question)
+        </div>
+
+        <div class="content">
+            <form id="psychTest">
+                <div class="question-block">
+                    <div class="question-title">1. Comment réagiriez-vous face à une situation de stress intense sur le terrain ?</div>
+                    <div class="option">
+                        <input type="radio" name="q1" value="a" id="q1a">
+                        <label for="q1a">a) Je prends un moment pour respirer et analyser calmement la situation.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q1" value="b" id="q1b">
+                        <label for="q1b">b) Je m'énerve et je réagis rapidement sans réfléchir.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q1" value="c" id="q1c">
+                        <label for="q1c">c) Je laisse un supérieur décider pour moi.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q1" value="d" id="q1d">
+                        <label for="q1d">d) J'abandonne la mission si c'est trop dur.</label>
+                    </div>
+                </div>
+
+                <div class="question-block">
+                    <div class="question-title">2. Que signifie pour vous la discipline ?</div>
+                    <div class="option">
+                        <input type="radio" name="q2" value="a" id="q2a">
+                        <label for="q2a">a) Suivre aveuglément tous les ordres.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q2" value="b" id="q2b">
+                        <label for="q2b">b) Une méthode pour punir les erreurs.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q2" value="c" id="q2c">
+                        <label for="q2c">c) Une force intérieure pour respecter des règles et un cadre.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q2" value="d" id="q2d">
+                        <label for="q2d">d) Une perte de liberté.</label>
+                    </div>
+                </div>
+
+                <div class="question-block">
+                    <div class="question-title">3. Si un camarade montre des signes de mal-être psychologique, que faites-vous ?</div>
+                    <div class="option">
+                        <input type="radio" name="q3" value="a" id="q3a">
+                        <label for="q3a">a) Je l'ignore, il doit être fort.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q3" value="b" id="q3b">
+                        <label for="q3b">b) Je le signale à un supérieur ou au service médical.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q3" value="c" id="q3c">
+                        <label for="q3c">c) Je me moque un peu pour détendre l'atmosphère.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q3" value="d" id="q3d">
+                        <label for="q3d">d) Je l'encourage à se taire pour ne pas nuire à l'équipe.</label>
+                    </div>
+                </div>
+
+                <div class="question-block">
+                    <div class="question-title">4. Comment gérez-vous les ordres contradictoires ?</div>
+                    <div class="option">
+                        <input type="radio" name="q4" value="a" id="q4a">
+                        <label for="q4a">a) Je choisis celui qui m'arrange.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q4" value="b" id="q4b">
+                        <label for="q4b">b) J'en parle à mon supérieur pour clarification.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q4" value="c" id="q4c">
+                        <label for="q4c">c) Je fais les deux.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q4" value="d" id="q4d">
+                        <label for="q4d">d) Je ne fais rien.</label>
+                    </div>
+                </div>
+
+                <div class="question-block">
+                    <div class="question-title">5. Quelle est votre réaction face à l'échec d'une mission ?</div>
+                    <div class="option">
+                        <input type="radio" name="q5" value="a" id="q5a">
+                        <label for="q5a">a) Je rejette la faute sur mes coéquipiers.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q5" value="b" id="q5b">
+                        <label for="q5b">b) Je me remets en question et j'analyse mes erreurs.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q5" value="c" id="q5c">
+                        <label for="q5c">c) Je ne dis rien et je passe à autre chose.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q5" value="d" id="q5d">
+                        <label for="q5d">d) J'abandonne les missions futures.</label>
+                    </div>
+                </div>
+
+                <div class="question-block">
+                    <div class="question-title">6. Quelle est votre attitude face à la hiérarchie ?</div>
+                    <div class="option">
+                        <input type="radio" name="q6" value="a" id="q6a">
+                        <label for="q6a">a) Je respecte les ordres tout en gardant mon esprit critique.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q6" value="b" id="q6b">
+                        <label for="q6b">b) Je remets en question tous les ordres.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q6" value="c" id="q6c">
+                        <label for="q6c">c) Je n'écoute que ceux que j'apprécie.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q6" value="d" id="q6d">
+                        <label for="q6d">d) Je fais tout ce qu'on me dit sans réfléchir.</label>
+                    </div>
+                </div>
+
+                <div class="question-block">
+                    <div class="question-title">7. Comment contribuez-vous à la cohésion d'équipe ?</div>
+                    <div class="option">
+                        <input type="radio" name="q7" value="a" id="q7a">
+                        <label for="q7a">a) Je reste isolé.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q7" value="b" id="q7b">
+                        <label for="q7b">b) Je motive les autres et je reste solidaire.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q7" value="c" id="q7c">
+                        <label for="q7c">c) Je critique souvent pour améliorer les choses.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q7" value="d" id="q7d">
+                        <label for="q7d">d) Je m'en fiche tant que je réussis mes tâches.</label>
+                    </div>
+                </div>
+
+                <div class="question-block">
+                    <div class="question-title">8. Face à un danger, que faites-vous ?</div>
+                    <div class="option">
+                        <input type="radio" name="q8" value="a" id="q8a">
+                        <label for="q8a">a) Je panique.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q8" value="b" id="q8b">
+                        <label for="q8b">b) Je fuis immédiatement.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q8" value="c" id="q8c">
+                        <label for="q8c">c) J'évalue la menace et j'agis de façon stratégique.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q8" value="d" id="q8d">
+                        <label for="q8d">d) Je me cache et j'attends les ordres.</label>
+                    </div>
+                </div>
+
+                <div class="question-block">
+                    <div class="question-title">9. Quelle est votre capacité à travailler en horaires décalés ou prolongés ?</div>
+                    <div class="option">
+                        <input type="radio" name="q9" value="a" id="q9a">
+                        <label for="q9a">a) Je refuse tout ce qui dépasse l'horaire prévu.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q9" value="b" id="q9b">
+                        <label for="q9b">b) Je m'adapte même si ce n'est pas toujours facile.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q9" value="c" id="q9c">
+                        <label for="q9c">c) Je fais semblant d'être malade pour éviter.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q9" value="d" id="q9d">
+                        <label for="q9d">d) Je travaille seulement si les autres aussi travaillent.</label>
+                    </div>
+                </div>
+
+                <div class="question-block">
+                    <div class="question-title">10. Que pensez-vous du rôle du mental dans une mission ?</div>
+                    <div class="option">
+                        <input type="radio" name="q10" value="a" id="q10a">
+                        <label for="q10a">a) Il est essentiel pour tenir sur le long terme.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q10" value="b" id="q10b">
+                        <label for="q10b">b) Seul le physique compte.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q10" value="c" id="q10c">
+                        <label for="q10c">c) Le mental n'a pas d'impact.</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="q10" value="d" id="q10d">
+                        <label for="q10d">d) C'est un détail qu'on développe après l'entraînement.</label>
+                    </div>
+                </div>
+
+                <div class="error" id="error">
+                    ⚠ Veuillez répondre à toutes les questions avant de soumettre le test.
+                </div>
+
+                <div class="signature-section">
+                    <div class="signature-title">Signature du candidat :</div>
+                    <canvas id="signatureCanvas" class="signature-canvas"></canvas>
+                    <div class="signature-buttons">
+                        <button type="button" class="clear-btn" onclick="clearSignature()">✖ Effacer</button>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">▶ Générer le résultat</button>
+            </form>
+
+            <div class="result" id="result">
+                <h2>Résultat du Test Psychologique</h2>
+                <div class="score" id="scoreDisplay"></div>
+                <div class="status apte" id="status"></div>
+                <button class="pdf-btn" onclick="generatePDF()">📄 Télécharger le PDF</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('signatureCanvas');
+        const ctx = canvas.getContext('2d');
+        let isDrawing = false;
+        let signatureData = null;
+
+        // Set canvas size
+        function resizeCanvas() {
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = rect.height;
+            ctx.strokeStyle = '#00ff00';
+            ctx.lineWidth = 2;
+            ctx.lineCap = 'round';
+        }
+
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        // Drawing functions
+        function startDrawing(e) {
+            isDrawing = true;
+            const rect = canvas.getBoundingClientRect();
+            ctx.beginPath();
+            ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            const rect = canvas.getBoundingClientRect();
+            ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+            ctx.stroke();
+        }
+
+        function stopDrawing() {
+            isDrawing = false;
+            signatureData = canvas.toDataURL();
+        }
+
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseout', stopDrawing);
+
+        // Touch support
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const mouseEvent = new MouseEvent('mousedown', {
+                clientX: touch.clientX,
+                clientY: touch.clientY
+            });
+            canvas.dispatchEvent(mouseEvent);
+        });
+
+        canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const mouseEvent = new MouseEvent('mousemove', {
+                clientX: touch.clientX,
+                clientY: touch.clientY
+            });
+            canvas.dispatchEvent(mouseEvent);
+        });
+
+        canvas.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            const mouseEvent = new MouseEvent('mouseup', {});
+            canvas.dispatchEvent(mouseEvent);
+        });
+
+        function clearSignature() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            signatureData = null;
+        }
+
+        const correctAnswers = {
+            q1: 'a',
+            q2: 'c',
+            q3: 'b',
+            q4: 'b',
+            q5: 'b',
+            q6: 'a',
+            q7: 'b',
+            q8: 'c',
+            q9: 'b',
+            q10: 'a'
+        };
+
+        let userAnswers = {};
+        let finalScore = 0;
+
+        document.getElementById('psychTest').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            userAnswers = {};
+            let allAnswered = true;
+
+            for (let i = 1; i <= 10; i++) {
+                const answer = document.querySelector(`input[name="q${i}"]:checked`);
+                if (!answer) {
+                    allAnswered = false;
+                    break;
+                }
+                userAnswers[`q${i}`] = answer.value;
+            }
+
+            if (!allAnswered) {
+                document.getElementById('error').style.display = 'block';
+                return;
+            }
+
+            document.getElementById('error').style.display = 'none';
+
+            let score = 0;
+            for (let q in correctAnswers) {
+                if (userAnswers[q] === correctAnswers[q]) {
+                    score++;
+                }
+            }
+
+            finalScore = (score / 10) * 10;
+
+            document.getElementById('scoreDisplay').textContent = finalScore.toFixed(2) + '/10';
+            
+            let status = '';
+            if (finalScore >= 7) {
+                status = 'APTE - Profil psychologique adapté au domaine militaire';
+            } else if (finalScore >= 5) {
+                status = 'APTE SOUS RÉSERVE - Formation complémentaire recommandée';
+            } else {
+                status = 'NON APTE - Profil psychologique insuffisant';
+            }
+            
+            document.getElementById('status').textContent = status;
+            document.getElementById('result').style.display = 'block';
+            
+            window.scrollTo({
+                top: document.getElementById('result').offsetTop - 100,
+                behavior: 'smooth'
+            });
+        });
+
+        function generatePDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Add logos at the top
+            const logoImg = new Image();
+            logoImg.src = 'images/logo.jpg';
+            
+            logoImg.onload = function() {
+                // Left logo
+                doc.addImage(logoImg, 'JPEG', 15, 10, 25, 25);
+                // Right logo
+                doc.addImage(logoImg, 'JPEG', 170, 10, 25, 25);
+
+                // Header background
+                doc.setFillColor(45, 80, 22);
+                doc.rect(0, 0, 210, 40, 'F');
+
+                doc.setTextColor(255, 255, 255);
+                doc.setFontSize(20);
+                doc.text('TEST PSYCHOLOGIQUE', 105, 20, { align: 'center' });
+                doc.setFontSize(14);
+                doc.text('DOMAINE MILITAIRE', 105, 30, { align: 'center' });
+
+                doc.setTextColor(0, 0, 0);
+                doc.setFontSize(12);
+                doc.text('Date: ' + new Date().toLocaleDateString('fr-FR'), 20, 50);
+
+                doc.setFontSize(11);
+                let y = 65;
+
+                const questions = [
+                    "1. Comment réagiriez-vous face à une situation de stress intense sur le terrain ?",
+                    "2. Que signifie pour vous la discipline ?",
+                    "3. Si un camarade montre des signes de mal-être psychologique, que faites-vous ?",
+                    "4. Comment gérez-vous les ordres contradictoires ?",
+                    "5. Quelle est votre réaction face à l'échec d'une mission ?",
+                    "6. Quelle est votre attitude face à la hiérarchie ?",
+                    "7. Comment contribuez-vous à la cohésion d'équipe ?",
+                    "8. Face à un danger, que faites-vous ?",
+                    "9. Quelle est votre capacité à travailler en horaires décalés ou prolongés ?",
+                    "10. Que pensez-vous du rôle du mental dans une mission ?"
+                ];
+
+                const answerLabels = {
+                    a: 'a)',
+                    b: 'b)',
+                    c: 'c)',
+                    d: 'd)'
+                };
+
+                for (let i = 1; i <= 10; i++) {
+                    if (y > 270) {
+                        doc.addPage();
+                        y = 20;
+                    }
+
+                    doc.setFont(undefined, 'bold');
+                    doc.text(questions[i-1], 20, y, { maxWidth: 170 });
+                    y += 7;
+                    
+                    doc.setFont(undefined, 'normal');
+                    const answer = answerLabels[userAnswers[`q${i}`]];
+                    const isCorrect = userAnswers[`q${i}`] === correctAnswers[`q${i}`];
+                    doc.text(`Réponse: ${answer} ${isCorrect ? '✓' : '✗'}`, 20, y);
+                    y += 10;
+                }
+
+                if (y > 200) {
+                    doc.addPage();
+                    y = 20;
+                }
+
+                y += 10;
+                doc.setFillColor(240, 240, 240);
+                doc.rect(20, y, 170, 30, 'F');
+
+                doc.setFontSize(16);
+                doc.setFont(undefined, 'bold');
+                doc.text('NOTE GLOBALE', 105, y + 12, { align: 'center' });
+                doc.setFontSize(24);
+                doc.text(finalScore.toFixed(2) + '/10', 105, y + 22, { align: 'center' });
+
+                y += 35;
+
+                let statusText = '';
+                if (finalScore >= 7) {
+                    statusText = 'APTE';
+                } else if (finalScore >= 5) {
+                    statusText = 'APTE SOUS RÉSERVE';
+                } else {
+                    statusText = 'NON APTE';
+                }
+
+                doc.setFontSize(14);
+                doc.setFont(undefined, 'bold');
+                doc.text('STATUT: ' + statusText, 105, y, { align: 'center' });
+
+                // Add signature if exists
+                if (signatureData) {
+                    y += 15;
+                    if (y > 240) {
+                        doc.addPage();
+                        y = 20;
+                    }
+                    doc.setFontSize(12);
+                    doc.setFont(undefined, 'normal');
+                    doc.text('Signature du candidat:', 20, y);
+                    y += 5;
+                    doc.addImage(signatureData, 'PNG', 20, y, 80, 30);
+                }
+
+                doc.save('test_psychologique_militaire.pdf');
+            };
+
+            logoImg.onerror = function() {
+                // If logo fails to load, generate PDF without logos
+                generatePDFWithoutLogos(doc);
+            };
+        }
+
+        function generatePDFWithoutLogos(doc) {
+            doc.setFillColor(45, 80, 22);
+            doc.rect(0, 0, 210, 40, 'F');
+
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(20);
+            doc.text('TEST PSYCHOLOGIQUE', 105, 20, { align: 'center' });
+            doc.setFontSize(14);
+            doc.text('DOMAINE MILITAIRE', 105, 30, { align: 'center' });
+
+            doc.setTextColor(0, 0, 0);
+            doc.setFontSize(12);
+            doc.text('Date: ' + new Date().toLocaleDateString('fr-FR'), 20, 50);
+
+            doc.setFontSize(11);
+            let y = 65;
+
+            const questions = [
+                "1. Comment réagiriez-vous face à une situation de stress intense sur le terrain ?",
+                "2. Que signifie pour vous la discipline ?",
+                "3. Si un camarade montre des signes de mal-être psychologique, que faites-vous ?",
+                "4. Comment gérez-vous les ordres contradictoires ?",
+                "5. Quelle est votre réaction face à l'échec d'une mission ?",
+                "6. Quelle est votre attitude face à la hiérarchie ?",
+                "7. Comment contribuez-vous à la cohésion d'équipe ?",
+                "8. Face à un danger, que faites-vous ?",
+                "9. Quelle est votre capacité à travailler en horaires décalés ou prolongés ?",
+                "10. Que pensez-vous du rôle du mental dans une mission ?"
+            ];
+
+            const answerLabels = {
+                a: 'a)',
+                b: 'b)',
+                c: 'c)',
+                d: 'd)'
+            };
+
+            for (let i = 1; i <= 10; i++) {
+                if (y > 270) {
+                    doc.addPage();
+                    y = 20;
+                }
+
+                doc.setFont(undefined, 'bold');
+                doc.text(questions[i-1], 20, y, { maxWidth: 170 });
+                y += 7;
+                
+                doc.setFont(undefined, 'normal');
+                const answer = answerLabels[userAnswers[`q${i}`]];
+                const isCorrect = userAnswers[`q${i}`] === correctAnswers[`q${i}`];
+                doc.text(`Réponse: ${answer} ${isCorrect ? '✓' : '✗'}`, 20, y);
+                y += 10;
+            }
+
+            if (y > 200) {
+                doc.addPage();
+                y = 20;
+            }
+
+            y += 10;
+            doc.setFillColor(240, 240, 240);
+            doc.rect(20, y, 170, 30, 'F');
+
+            doc.setFontSize(16);
+            doc.setFont(undefined, 'bold');
+            doc.text('NOTE GLOBALE', 105, y + 12, { align: 'center' });
+            doc.setFontSize(24);
+            doc.text(finalScore.toFixed(2) + '/10', 105, y + 22, { align: 'center' });
+
+            y += 35;
+
+            let statusText = '';
+            if (finalScore >= 7) {
+                statusText = 'APTE';
+            } else if (finalScore >= 5) {
+                statusText = 'APTE SOUS RÉSERVE';
+            } else {
+                statusText = 'NON APTE';
+            }
+
+            doc.setFontSize(14);
+            doc.setFont(undefined, 'bold');
+            doc.text('STATUT: ' + statusText, 105, y, { align: 'center' });
+
+            // Add signature if exists
+            if (signatureData) {
+                y += 15;
+                if (y > 240) {
+                    doc.addPage();
+                    y = 20;
+                }
+                doc.setFontSize(12);
+                doc.setFont(undefined, 'normal');
+                doc.text('Signature du candidat:', 20, y);
+                y += 5;
+                doc.addImage(signatureData, 'PNG', 20, y, 80, 30);
+            }
+
+            doc.save('test_psychologique_militaire.pdf');
+        }
+    </script>
+</body>
+</html>
