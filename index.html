@@ -330,6 +330,99 @@
             border-color: #00ff00;
             box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
         }
+
+        /* Responsive Design pour les informations personnelles */
+        @media (max-width: 768px) {
+            .personal-info-section {
+                padding: 15px;
+                margin-bottom: 20px;
+            }
+
+            .personal-info-title {
+                font-size: 16px;
+                margin-bottom: 15px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 15px;
+                margin-bottom: 15px;
+            }
+
+            .form-group label {
+                font-size: 13px;
+                margin-bottom: 6px;
+            }
+
+            .form-group input[type="text"],
+            .form-group input[type="date"],
+            .form-group select,
+            .form-group textarea {
+                padding: 8px;
+                font-size: 13px;
+            }
+
+            .form-group input[type="file"] {
+                padding: 8px;
+                font-size: 12px;
+            }
+
+            .form-group input[type="file"]::file-selector-button {
+                padding: 6px 12px;
+                font-size: 12px;
+                margin-right: 8px;
+            }
+
+            .form-group textarea {
+                min-height: 60px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .personal-info-section {
+                padding: 12px;
+                margin-bottom: 15px;
+            }
+
+            .personal-info-title {
+                font-size: 14px;
+                margin-bottom: 12px;
+                padding-bottom: 8px;
+            }
+
+            .form-row {
+                gap: 12px;
+                margin-bottom: 12px;
+            }
+
+            .form-group label {
+                font-size: 12px;
+                margin-bottom: 5px;
+            }
+
+            .form-group input[type="text"],
+            .form-group input[type="date"],
+            .form-group select,
+            .form-group textarea {
+                padding: 8px;
+                font-size: 12px;
+            }
+
+            .form-group input[type="file"] {
+                padding: 6px;
+                font-size: 11px;
+            }
+
+            .form-group input[type="file"]::file-selector-button {
+                padding: 5px 10px;
+                font-size: 11px;
+                margin-right: 6px;
+            }
+
+            .form-group textarea {
+                min-height: 50px;
+            }
+        }
     </style>
 </head>
 <body>
