@@ -599,7 +599,7 @@
                 </div>
 
                 <div class="signature-section">
-                    <div class="signature-title">Signature du candidat :</div>
+                    <div class="signature-title">Signature du médecin militaire :</div>
                     <canvas id="signatureCanvas" class="signature-canvas"></canvas>
                     <div class="signature-buttons">
                         <button type="button" class="clear-btn" onclick="clearSignature()">✖ Effacer</button>
@@ -893,7 +893,7 @@
                     }
                     doc.setFontSize(12);
                     doc.setFont(undefined, 'normal');
-                    doc.text('Signature du candidat:', 20, y);
+                    doc.text('Signature du médecin militaire:', 20, y);
                     y += 5;
                     doc.addImage(signatureData, 'PNG', 20, y, 80, 30);
                 }
@@ -1022,7 +1022,7 @@
                 }
                 doc.setFontSize(12);
                 doc.setFont(undefined, 'normal');
-                doc.text('Signature du candidat:', 20, y);
+                doc.text('Signature du médecin militaire:', 20, y);
                 y += 5;
                 doc.addImage(signatureData, 'PNG', 20, y, 80, 30);
             }
