@@ -618,29 +618,35 @@
 
             // Add logos at the top
             const logoImg1 = new Image();
-            logoImg1.src = 'images/logo1.jpeg';
             const logoImg2 = new Image();
-            logoImg2.src = 'images/logo2.jpeg';
             
             let logosLoaded = 0;
+            let logosFailed = false;
             const totalLogos = 2;
             
             function checkLogosLoaded() {
                 logosLoaded++;
-                if (logosLoaded === totalLogos) {
+                if (logosLoaded === totalLogos && !logosFailed) {
                     generatePDFContent();
                 }
             }
             
+            function handleLogoError() {
+                if (!logosFailed) {
+                    logosFailed = true;
+                    generatePDFWithoutLogos(doc);
+                }
+            }
+            
             function generatePDFContent() {
+                // Header background
+                doc.setFillColor(45, 80, 22);
+                doc.rect(0, 0, 210, 40, 'F');
+                
                 // Left logo
                 doc.addImage(logoImg1, 'JPEG', 15, 10, 25, 25);
                 // Right logo
                 doc.addImage(logoImg2, 'JPEG', 170, 10, 25, 25);
-
-                // Header background
-                doc.setFillColor(45, 80, 22);
-                doc.rect(0, 0, 210, 40, 'F');
 
                 doc.setTextColor(255, 255, 255);
                 doc.setFontSize(20);
@@ -728,16 +734,12 @@
             
             logoImg1.onload = checkLogosLoaded;
             logoImg2.onload = checkLogosLoaded;
-
-            logoImg1.onerror = function() {
-                // If logo fails to load, generate PDF without logos
-                generatePDFWithoutLogos(doc);
-            };
+            logoImg1.onerror = handleLogoError;
+            logoImg2.onerror = handleLogoError;
             
-            logoImg2.onerror = function() {
-                // If logo fails to load, generate PDF without logos
-                generatePDFWithoutLogos(doc);
-            };
+            // Load images
+            logoImg1.src = 'images/logo1.jpeg';
+            logoImg2.src = 'images/logo2.jpeg';
         }
 
         function generatePDFWithoutLogos(doc) {
