@@ -164,17 +164,7 @@
             text-shadow: 0 0 15px rgba(0, 255, 0, 0.8);
         }
 
-        .status {
-            font-size: 20px;
-            padding: 15px;
-            margin-top: 20px;
-            border-radius: 5px;
-        }
 
-        .status.apte {
-            background: rgba(0, 255, 0, 0.2);
-            border: 2px solid #00ff00;
-        }
 
         .pdf-btn {
             background: #003d00;
@@ -254,8 +244,8 @@
     <div class="container">
         <div class="header">
             <div class="header-logos">
-                <img src="images/logo.jpg" alt="Logo 1" class="header-logo">
-                <img src="images/logo.jpg" alt="Logo 2" class="header-logo">
+                <img src="images/logo1.jpeg" alt="Logo 1" class="header-logo">
+                <img src="images/logo2.jpeg" alt="Logo 2" class="header-logo">
             </div>
             <h1>Test Psychologique - Domaine Militaire</h1>
         </div>
@@ -484,7 +474,6 @@
             <div class="result" id="result">
                 <h2>Résultat du Test Psychologique</h2>
                 <div class="score" id="scoreDisplay"></div>
-                <div class="status apte" id="status"></div>
                 <button class="pdf-btn" onclick="generatePDF()">📄 Télécharger le PDF</button>
             </div>
         </div>
@@ -615,16 +604,6 @@
 
             document.getElementById('scoreDisplay').textContent = finalScore.toFixed(2) + '/10';
             
-            let status = '';
-            if (finalScore >= 7) {
-                status = 'APTE - Profil psychologique adapté au domaine militaire';
-            } else if (finalScore >= 5) {
-                status = 'APTE SOUS RÉSERVE - Formation complémentaire recommandée';
-            } else {
-                status = 'NON APTE - Profil psychologique insuffisant';
-            }
-            
-            document.getElementById('status').textContent = status;
             document.getElementById('result').style.display = 'block';
             
             window.scrollTo({
@@ -638,14 +617,26 @@
             const doc = new jsPDF();
 
             // Add logos at the top
-            const logoImg = new Image();
-            logoImg.src = 'images/logo.jpg';
+            const logoImg1 = new Image();
+            logoImg1.src = 'images/logo1.jpeg';
+            const logoImg2 = new Image();
+            logoImg2.src = 'images/logo2.jpeg';
             
-            logoImg.onload = function() {
+            let logosLoaded = 0;
+            const totalLogos = 2;
+            
+            function checkLogosLoaded() {
+                logosLoaded++;
+                if (logosLoaded === totalLogos) {
+                    generatePDFContent();
+                }
+            }
+            
+            function generatePDFContent() {
                 // Left logo
-                doc.addImage(logoImg, 'JPEG', 15, 10, 25, 25);
+                doc.addImage(logoImg1, 'JPEG', 15, 10, 25, 25);
                 // Right logo
-                doc.addImage(logoImg, 'JPEG', 170, 10, 25, 25);
+                doc.addImage(logoImg2, 'JPEG', 170, 10, 25, 25);
 
                 // Header background
                 doc.setFillColor(45, 80, 22);
@@ -718,19 +709,6 @@
 
                 y += 35;
 
-                let statusText = '';
-                if (finalScore >= 7) {
-                    statusText = 'APTE';
-                } else if (finalScore >= 5) {
-                    statusText = 'APTE SOUS RÉSERVE';
-                } else {
-                    statusText = 'NON APTE';
-                }
-
-                doc.setFontSize(14);
-                doc.setFont(undefined, 'bold');
-                doc.text('STATUT: ' + statusText, 105, y, { align: 'center' });
-
                 // Add signature if exists
                 if (signatureData) {
                     y += 15;
@@ -746,9 +724,17 @@
                 }
 
                 doc.save('test_psychologique_militaire.pdf');
-            };
+            }
+            
+            logoImg1.onload = checkLogosLoaded;
+            logoImg2.onload = checkLogosLoaded;
 
-            logoImg.onerror = function() {
+            logoImg1.onerror = function() {
+                // If logo fails to load, generate PDF without logos
+                generatePDFWithoutLogos(doc);
+            };
+            
+            logoImg2.onerror = function() {
                 // If logo fails to load, generate PDF without logos
                 generatePDFWithoutLogos(doc);
             };
@@ -824,19 +810,6 @@
             doc.text(finalScore.toFixed(2) + '/10', 105, y + 22, { align: 'center' });
 
             y += 35;
-
-            let statusText = '';
-            if (finalScore >= 7) {
-                statusText = 'APTE';
-            } else if (finalScore >= 5) {
-                statusText = 'APTE SOUS RÉSERVE';
-            } else {
-                statusText = 'NON APTE';
-            }
-
-            doc.setFontSize(14);
-            doc.setFont(undefined, 'bold');
-            doc.text('STATUT: ' + statusText, 105, y, { align: 'center' });
 
             // Add signature if exists
             if (signatureData) {
