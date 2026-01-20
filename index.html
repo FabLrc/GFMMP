@@ -921,51 +921,6 @@
                 doc.text('Observations: ' + observation, 25, y, { maxWidth: 165 });
                 
                 y += 20;
-                doc.setFontSize(11);
-
-                const questions = [
-                    "1. Comment réagiriez-vous face à une situation de stress intense sur le terrain ?",
-                    "2. Que signifie pour vous la discipline ?",
-                    "3. Si un camarade montre des signes de mal-être psychologique, que faites-vous ?",
-                    "4. Comment gérez-vous les ordres contradictoires ?",
-                    "5. Quelle est votre réaction face à l'échec d'une mission ?",
-                    "6. Quelle est votre attitude face à la hiérarchie ?",
-                    "7. Comment contribuez-vous à la cohésion d'équipe ?",
-                    "8. Face à un danger, que faites-vous ?",
-                    "9. Quelle est votre capacité à travailler en horaires décalés ou prolongés ?",
-                    "10. Que pensez-vous du rôle du mental dans une mission ?"
-                ];
-
-                const answerLabels = {
-                    a: 'a)',
-                    b: 'b)',
-                    c: 'c)',
-                    d: 'd)'
-                };
-
-                for (let i = 1; i <= 10; i++) {
-                    if (y > 270) {
-                        doc.addPage();
-                        y = 20;
-                    }
-
-                    doc.setFont(undefined, 'bold');
-                    doc.text(questions[i-1], 20, y, { maxWidth: 170 });
-                    y += 7;
-                    
-                    doc.setFont(undefined, 'normal');
-                    const answer = answerLabels[userAnswers[`q${i}`]];
-                    const isCorrect = userAnswers[`q${i}`] === correctAnswers[`q${i}`];
-                    doc.text(`Réponse: ${answer} ${isCorrect ? '✓' : '✗'}`, 20, y);
-                    y += 10;
-                }
-
-                if (y > 200) {
-                    doc.addPage();
-                    y = 20;
-                }
-
-                y += 10;
                 doc.setFillColor(240, 240, 240);
                 doc.rect(20, y, 170, 30, 'F');
 
@@ -1050,51 +1005,6 @@
             doc.text('Observations: ' + observation, 25, y, { maxWidth: 165 });
             
             y += 20;
-            doc.setFontSize(11);
-
-            const questions = [
-                "1. Comment réagiriez-vous face à une situation de stress intense sur le terrain ?",
-                "2. Que signifie pour vous la discipline ?",
-                "3. Si un camarade montre des signes de mal-être psychologique, que faites-vous ?",
-                "4. Comment gérez-vous les ordres contradictoires ?",
-                "5. Quelle est votre réaction face à l'échec d'une mission ?",
-                "6. Quelle est votre attitude face à la hiérarchie ?",
-                "7. Comment contribuez-vous à la cohésion d'équipe ?",
-                "8. Face à un danger, que faites-vous ?",
-                "9. Quelle est votre capacité à travailler en horaires décalés ou prolongés ?",
-                "10. Que pensez-vous du rôle du mental dans une mission ?"
-            ];
-
-            const answerLabels = {
-                a: 'a)',
-                b: 'b)',
-                c: 'c)',
-                d: 'd)'
-            };
-
-            for (let i = 1; i <= 10; i++) {
-                if (y > 270) {
-                    doc.addPage();
-                    y = 20;
-                }
-
-                doc.setFont(undefined, 'bold');
-                doc.text(questions[i-1], 20, y, { maxWidth: 170 });
-                y += 7;
-                
-                doc.setFont(undefined, 'normal');
-                const answer = answerLabels[userAnswers[`q${i}`]];
-                const isCorrect = userAnswers[`q${i}`] === correctAnswers[`q${i}`];
-                doc.text(`Réponse: ${answer} ${isCorrect ? '✓' : '✗'}`, 20, y);
-                y += 10;
-            }
-
-            if (y > 200) {
-                doc.addPage();
-                y = 20;
-            }
-
-            y += 10;
             doc.setFillColor(240, 240, 240);
             doc.rect(20, y, 170, 30, 'F');
 
